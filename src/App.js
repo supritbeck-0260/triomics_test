@@ -1,8 +1,7 @@
-// import "./styles.css";
-import axios from "axios";
+import "./App.css";
 import { useState } from "react";
-import Modal from "./Modal";
-
+import Comments from "./Comments/Index";
+import { getComments } from "./APIs/Axios";
 // https://jsonplaceholder.typicode.com/posts/1/comments -> api to fetch comment
 
 // https://reqres.in/api/users?page=2 -> api to fetch users
@@ -10,54 +9,17 @@ import Modal from "./Modal";
 // https://jsonplaceholder.typicode.com/guide/ -> api to update comment
 //method - put , payload -{userid,commentId}
 export default function App() {
-  const [comments, setComments] = useState([]);
-  const [users,setUsers] = useState([])
-  const getComments = async () => {
-    try {
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts/1/comments"
-      );
-      setComments(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const fetchUers = async ()=>{
-    try {
-      const response = await axios.get(
-        "https://reqres.in/api/users?page=2"
-      );
-      setUsers(response.data.data)
-     
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const updateComment =async ({commentId,userId})=>{
-    try {
-      const response = await axios.post(
-        "https://jsonplaceholder.typicode.com/guide",{
-          id:commentId,id:userId
-        }
-      );
-      console.log(response)
-     
-    } catch (error) {
-      console.log(error);
-    }
+  const [comments, setComments] = useState(null);
+  const clickHandler = async ()=>{
+    const {data,error} = await getComments();
+    if(error)return alert(error);
+
+    setComments(data)
   }
   return (
     <div className="App">
-      <button onClick={getComments}>Get comments</button>
-      <div onClick={fetchUers}>
-      {comments.map((comment, index) => (
-        <div key={comment.id}>
-        <p >{comment.name}</p>
-        {users.length &&<Modal users={users} updateComment={updateComment} commentId={comment.id}/>}
-        </div>
-      ))}
-      </div>
-      <hr/>
+      <button onClick={clickHandler}>Get Comment</button>
+      <Comments comments={comments}/>
      
     </div>
   );
