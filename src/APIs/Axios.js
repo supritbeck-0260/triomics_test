@@ -24,8 +24,10 @@ export const getComments = async () => {
   export const updateComment =async (commentId,userId)=>{
     try {
       const response = await axios.put(
-        "https://jsonplaceholder.typicode.com/guide",{
-          id:commentId,id:userId
+        "https://jsonplaceholder.typicode.com/guide",
+        {
+          commentId,
+         userId
         }
       );
       return {data:response.data}
